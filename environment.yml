@@ -28,4 +28,5 @@ dependencies:
   - pip:
       - flask>=2.3
       - kagglehub>=0.2
-
+      - gunicorn>=21.2.0    # optional, for Linux server
+      - waitress>=2.2.0     # optional, for Windows server
