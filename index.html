@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Football Injury Risk Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="text-center mb-4">Football Injury Risk Predictor</h1>
+    <form method="POST" class="card p-4 shadow-lg rounded">
+        <div class="row">
+            <!-- Core numeric features -->
+            <div class="col-md-4 mb-3">
+                <label>Nb On Pitch</label>
+                <input type="number" name="nb_on_pitch" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Subbed In</label>
+                <input type="number" name="subed_in" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Subbed Out</label>
+                <input type="number" name="subed_out" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Goals</label>
+                <input type="number" name="goals" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Assists</label>
+                <input type="number" name="assists" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Yellow Cards</label>
+                <input type="number" name="yellow_cards" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Goals Conceded</label>
+                <input type="number" name="goals_conceded" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Height (cm)</label>
+                <input type="number" name="height" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Age</label>
+                <input type="number" name="age" class="form-control" value="0" required>
+            </div>
+
+            <!-- Days missed features -->
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Bone Fracture</label>
+                <input type="number" name="days_missed_bone_fracture" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Contusion/Bruise</label>
+                <input type="number" name="days_missed_contusion_bruise" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Illness/Infection</label>
+                <input type="number" name="days_missed_illness_infection" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Joint/Cartilage</label>
+                <input type="number" name="days_missed_joint_cartilage" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Ligament</label>
+                <input type="number" name="days_missed_ligament" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Muscle</label>
+                <input type="number" name="days_missed_muscle" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Other Medical</label>
+                <input type="number" name="days_missed_other_medical" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Spine/Back</label>
+                <input type="number" name="days_missed_spine_back" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Surgery/Postop</label>
+                <input type="number" name="days_missed_surgery_postop" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Tendon</label>
+                <input type="number" name="days_missed_tendon" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Days Missed Unknown</label>
+                <input type="number" name="days_missed_unknown" class="form-control" value="0" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label>Total Days Missed</label>
+                <input type="number" name="total_days_missed" class="form-control" value="0" required>
+            </div>
+
+            <!-- Categorical -->
+            <div class="col-md-12 mb-3">
+                <label>Position Group</label>
+                <select name="position_group" class="form-select" required>
+                    <option value="Defense">Defender</option>
+                    <option value="Midfielder">Midfielder</option>
+                    <option value="Attack">Forward</option>
+                    <option value="Goalkeeper">Goalkeeper</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Predict</button>
+    </form>
+
+    {% if prediction %}
+    <div class="alert alert-info text-center mt-4">
+        <h4>{{ prediction }}</h4>
+    </div>
+    {% endif %}
+</body>
+</html>
