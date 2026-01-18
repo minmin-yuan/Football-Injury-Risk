@@ -281,9 +281,9 @@ docker run -p 9696:9696 netflix-churn
   5. Click Create Web Service, Render will automatically build docker image, install dependencies from requirements.txt and start
   the Gunicorn server.
   6. After a minute or two, you’ll get a public URL like: https://netflix-churn-prediction.onrender.com
-- Service URL: https://netflix-churn-prediction.onrender.com/predict (already deployed and can be accessd)
-- Access: Send HTTP POST requests with JSON payloads as shown above.
+- Service URL: https://football-injury-risk.onrender.com/ (already deployed and can be accessd)
 - screenshots and record of Render deployment
+  
   
 
 ## **📘 Conclusion**
