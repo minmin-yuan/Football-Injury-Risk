@@ -9,13 +9,22 @@ This project focuses on predicting the risk of injury for football players using
 
 
 ## **📂 Dataset**
-- **Source:** Kaggle – football-datasets
-- **Tables used:**
+- **Source:** Kaggle – football-datasets: https://www.kaggle.com/datasets/xfkzujqjvx97n/football-datasets/data
+- **Datasets in the source:**
+   - Player injury histories (dates, injury_reason, days_missed, games_missed)
+   - Player performance stats (minutes, goals, cards, subbed in/out)
+   - Player profiles (age, height, position)
+   - Market values, transfer histories, teammate relationships
+   - Team and competition context for players
+- **Tables used based on predicition goal:**
   - player_injuries
   - player_performances
   - player_profiles
     
 Seasons filtered to 2000–2025.
+- **Predicition Probelm:**
+  - Regression: Predict days missed or games lost due to injury.
+  - → Target: days_missed missed next season.
 
 ## **🧹 Data Processing**
 - **Season Normalization**
@@ -65,7 +74,7 @@ log_next_season_days = log1p(next_season_days)
 ```
 ## **🧠 Feature Engineering**
 **Numerical Features**
-- Performance: nb_on_pitch, subed_in/out, goals, assists, yellow_cards, goals_conceded
+- Performance: nb_on_pitch, nb_in_group, subed_in/out, goals, assists, yellow_cards, goals_conceded
 - Profile: height, age
 - Injury history: all days_missed_* columns + total_days_missed
 
@@ -184,9 +193,17 @@ This project builds a robust injury prediction pipeline with:
 - Temporal modeling & evaluation
 - Multiple model families (linear, tree-based, deep learning)
 - Strong predictive performance on real football data
-
-It is production-ready for:
-
 - API deployment
 - Player risk dashboards
 - Club analytics workflows
+
+## ** Limitations**
+In injury research, true workload usually refers to:
+
+- GPS distance
+- High-speed running
+- Accelerations / decelerations
+- Training load (session RPE × duration)
+- Acute:chronic workload ratios
+The kaggle datasets do not have these types of information. In addition, we use seasonal aggregation  data because we don't have match level details and information about environmental information such as stadium grass status and weather. And we only club performance data because of not having seasonal national team data.
+
