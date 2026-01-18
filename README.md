@@ -180,11 +180,111 @@ Outputs:
 
 
 
-## **📦 Exported Artifacts**
+## **📦 Model Deployment**
+- **Exported Artifacts**
 
-- full_dataset.csv — cleaned dataset
-- nn_pipeline.pkl — saved final model
+  - full_dataset.csv — cleaned dataset
+  - nn_pipeline.pkl — saved final model
 
+- **
+### Local Deployment 
+#### 1. Prepare environment
+
+**Option A — Conda**
+
+```bash
+# create environment from provided file
+conda env create -f environment.yml
+
+# activate it
+conda activate netflix-churn
+```
+
+**Option B — pip + venv**
+create and activate a venv
+```bash
+python3 -m venv .venv
+source .venv/bin/activate   # macOS / Linux
+```
+
+Windows (PowerShell)
+```bash
+.venv\Scripts\activate
+```
+
+install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+#### 2. Prepare the trained model
+To train and save the model locally:
+```bash
+python train.py
+```
+#### 3. Run the service
+- **Run the Flask service locally**
+```bash
+python predict.py
+```
+Defalut port:9696\
+Access locally: http://127.0.0.1:9696/predict
+
+- **Run the service (production-like) with Gunicorn**
+```bash
+gunicorn --bind 0.0.0.0:9696 predict:app --workers 4
+```
+#### 4.Test the API: Use curl or a tool like Postman:**
+```
+curl -X POST http://127.0.0.1:9696/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "age": 34,
+    "gender": "Female",
+    "subscription_type": "Standard",
+    "watch_hours": 15.3,
+    "last_login_days": 5,
+    "region": "Europe",
+    "device": "Mobile",
+    "payment_method": "PayPal",
+    "number_of_profiles": 3,
+    "avg_watch_time_per_day": 1.2,
+    "favorite_genre": "Drama",
+    "age_group": "26–35"
+  }'
+```
+- **Output: Churn probability and binary churn prediction.**
+
+
+  
+### Containerized Deployment (Docker)
+The application can be containerized using Docker\
+Dockerfile: Provided in the repository.
+
+```
+docker build -t netflix-churn .
+```
+```
+docker run -p 9696:9696 netflix-churn
+```
+- screenshots of docker running and test
+<img width="1356" height="292" alt="docker" src="https://github.com/user-attachments/assets/b413dbb4-06c4-4fed-84da-c9d0c19b9fab" />
+<img width="1128" height="218" alt="test_api" src="https://github.com/user-attachments/assets/13617f43-37d5-4b21-97c2-bc9684780e04" />
+
+### Cloud Deployment (Render)
+- The service can be deployed to the cloud for remote access:
+- Instructions for Render deployment:
+  1. push project to github repo
+  2. Sign up(use github account is the easist) and log in to Render
+  3. Once logged in, click New → Web Service
+  4. Connect to github repo and select football-injury-risk repo
+  5. Click Create Web Service, Render will automatically build docker image, install dependencies from requirements.txt and start
+  the Gunicorn server.
+  6. After a minute or two, you’ll get a public URL like: https://netflix-churn-prediction.onrender.com
+- Service URL: https://netflix-churn-prediction.onrender.com/predict (already deployed and can be accessd)
+- Access: Send HTTP POST requests with JSON payloads as shown above.
+- screenshots and record of Render deployment
+  
 
 ## **📘 Conclusion**
 This project builds a robust injury prediction pipeline with:
