@@ -250,16 +250,22 @@ http://127.0.0.1:9696/
 
   
 ### Containerized Deployment (Docker)
-The application can be containerized using Docker\
+#### Build image & Run container
 Dockerfile: Provided in the repository.
-
 ```
-docker build -t football-injury-risk .
+docker build -t football-risk-app .
 ```
 ```
-docker run -p 9696:9696 netflix-churn
+docker run -p 9696:9696 football-risk-app
 ```
 - screenshots of docker running and test
+#### Test Docker:**
+```
+python predict-test.py
+```
+or browser
+```
+http:/
 
 <img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
 <img width="1110" height="90" alt="Snip20260119_3" src="https://github.com/user-attachments/assets/cea304bd-b505-40af-a98e-80354c91a4cd" />
