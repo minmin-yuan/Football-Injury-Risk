@@ -347,7 +347,7 @@ This project builds a robust injury prediction pipeline with:
 This project has several limitations due to the available data:
 
 - **Workload metrics are limited**
-True workload in injury research often includes GPS distance, high-speed running, accelerations/decelerations, training load (session RPE × duration), and acute:chronic workload ratios. These metrics are not available in the Kaggle datasets used here.
+True workload in injury research often includes GPS distance, high-speed running, accelerations/decelerations, training load (session RPE × duration), and acute workload ratios. These metrics are not available in the Kaggle datasets used here.
 
 - **Aggregated seasonal data**
 Only seasonal aggregates are available; match-level details and environmental factors such as weather or stadium surface are missing.
