@@ -25,12 +25,12 @@ This project focuses on predicting the risk of injury for football players using
   - Regression: Predict days missed next season due to injury.
   - → Target: days_missed missed next season.
 
-## **🧹 Data Processing**
+## **Data Processing**
 - **Season Normalization**
 Season strings come in inconsistent formats (YY/YY, YYYY/YY, YY/YYYY).
 A custom parser converts all formats to a **season_id (start year)**.
 
-- **Seasons filtered to 2000–2025.**
+- **Seasons filtered to 2000–2025 to ensure:**
    - Data is high-quality and consistent
    - Models learn patterns relevant to modern football
    - Avoids noise from older seasons with missing or inconsistent records
@@ -67,12 +67,12 @@ Combined injury, profile, and performance tables, then:
   - Removed rows missing height or position group
 
 
-## **🎯 Target Definition**
+## **Target Definition**
 For each player-season:
 
   - next_season_days = total_days_missed in next season
   - Filter to rows where the next season exists
-  - Log-transform:
+  - Log-transform: because injury days are highly skewed (Most players have 0 or very few days missed), and a few players have very long injury spells
 
 ```python
 log_next_season_days = log1p(next_season_days)
@@ -115,7 +115,7 @@ Temporal split:
 This prevents data leakage across seasons.
 
 ## **Model Training**
-- **Model Selection:**
+**Model Selection:**
 - We use ridge regression for baseline model, LightGBM for peak predictive performance on tabular data, and zero-Inflated neural network to explicitly model latent injury vulnerability and exposure-driven risk.
    - Ridge Regression provides a strong and interpretable baseline to understand linear relationships and feature effects.
    - LightGBM represents a high-performance tree-based model that captures non-linear patterns common in sports performance data.
@@ -172,7 +172,7 @@ Validation:
 - Top‑10% capture: 0.563
 
 
-## ** Model Comparision**
+## **Model Comparision**
 | Model | MAE ↓   | Spearman ↑ | Top-10% capture ↑ |
 | ----- | ------- | ---------- | ----------------- |
 | LGBM  | 14.9988 | 0.3370     | 0.5703            |
@@ -186,7 +186,7 @@ Validation:
 -Ridge performed competitively on MAE but lagged in ranking metrics, reflecting its linear limitation.
 
 ## **Train on full training set**
-We chose LGBM and Neural Network to do hyperparamter tuning as they have overal better performance.
+
 | Model                 | MAE ↓     | Spearman ↑       | Top-10% capture ↑ |
 | --------------------- | --------- | ---------------- | ----------------- |
 | **LGBM (full train)** | **↑13.19** | **↓ ~0.28–0.30** | **↓ ~0.43**      |
@@ -234,7 +234,7 @@ Outputs:
 
 ### Local Deployment 
 #### 1. Prepare environment
-Use **Python 3.10 or 3.11** to ensure PyTorch install cleaning, Numpy, Pandas and Scikit=learn are compatible and pickled model can be loaded correctly.
+Use **Python 3.10 or 3.11** to ensure PyTorch installation, Numpy, Pandas and Scikit=learn are compatible and pickled model can be loaded correctly.
 
 **Option A — Conda**
 
@@ -243,8 +243,9 @@ conda create -n football python=3.11 -y
 conda activate football
 pip install -r requirements.txt
 ```
-```
+
 **Option B — pip + venv**
+
 create and activate a venv
 ```bash
 python3.11 -m venv .venv
@@ -275,7 +276,7 @@ python predict-test.py
 ```
 <img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
 or browser with simple UI
-``
+```
 http://127.0.0.1:9696/
 ```
 <img width="2002" height="1336" alt="Screenshot 2026-01-16 224213" src="https://github.com/user-attachments/assets/b191c79c-8c6b-422c-b426-dc2311216866" />
@@ -293,7 +294,7 @@ docker build -t football-risk-app .
 docker run -p 9696:9696 football-risk-app
 ```
 - screenshots of docker running and test
-#### Test Docker:**
+- 
 ```
 python predict-test.py
 ```
@@ -321,7 +322,7 @@ http://127.0.0.1:9696/
   <img width="2162" height="1242" alt="image" src="https://github.com/user-attachments/assets/ba8723a0-5fe9-4636-9306-f9872a534870" />
 
 
-## **📘 Conclusion**
+## **Conclusion**
 This project builds a robust injury prediction pipeline with:
 
 - High-quality feature engineering
@@ -332,7 +333,7 @@ This project builds a robust injury prediction pipeline with:
 - Player injury risk analysis
 - Football analytics workflows
 
-## ** Limitations**
+## **Limitations**
 This project has several limitations due to the available data:
 
 - **Workload metrics are limited**
