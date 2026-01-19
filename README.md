@@ -294,13 +294,16 @@ http://127.0.0.1:9696/
 ### Containerized Deployment (Docker)
 #### Build image & Run container
 Dockerfile: Provided in the repository.
+
 ```
 docker build -t football-risk-app .
 ```
 ```
 docker run -p 9696:9696 football-risk-app
 ```
-- screenshots of docker running and test
+
+screenshots of docker running and test
+
 ```
 python predict-test.py
 ```
