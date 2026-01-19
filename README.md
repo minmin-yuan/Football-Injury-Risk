@@ -29,7 +29,8 @@ This project focuses on predicting the risk of injury for football players using
 - **Season Normalization**
 Season strings come in inconsistent formats (YY/YY, YYYY/YY, YY/YYYY).
 A custom parser converts all formats to a **season_id (start year)**.
--**Seasons filtered to 2000–2025.**
+
+- **Seasons filtered to 2000–2025.**
    - Data is high-quality and consistent
    - Models learn patterns relevant to modern football
    - Avoids noise from older seasons with missing or inconsistent records
@@ -114,20 +115,22 @@ Temporal split:
 This prevents data leakage across seasons.
 
 ## **Model Training**
-Model Selection: We use ridge regression for interpretability, LightGBM for peak predictive performance on tabular data, and a two-stage neural network to explicitly model latent injury vulnerability and exposure-driven risk.
-- Ridge Regression provides a strong and interpretable baseline to understand linear relationships and feature effects.
-- LightGBM represents a high-performance tree-based model that captures non-linear patterns common in sports performance data.
- -Neural Network (Zero-Inflated) is specifically designed to handle the large number of zero-injury cases and model both injury risk and severity.
+- **Model Selection:**
+- We use ridge regression for baseline model, LightGBM for peak predictive performance on tabular data, and zero-Inflated neural network to explicitly model latent injury vulnerability and exposure-driven risk.
+   - Ridge Regression provides a strong and interpretable baseline to understand linear relationships and feature effects.
+   - LightGBM represents a high-performance tree-based model that captures non-linear patterns common in sports performance data.
+    -Neural Network (Zero-Inflated) is specifically designed to handle the large number of zero-injury cases and model both injury risk and severity.
   
-## **🤖 Models Evaluated**
-Evaluation Criterion: This injury-risk prediction task involves zero-inflated, highly skewed data, where most players miss 0 days, while a small subset miss many days. Standard regression metrics alone are insufficient, so multiple complementary metrics were used.
+## **🤖 Models Evaluation & Hyperparameter Tuning**
+**Evaluation Criterion:**
+- This injury-risk prediction task involves zero-inflated, highly skewed data, where most players miss 0 days, while a small subset miss many days. Standard regression metrics alone are insufficient, so multiple complementary metrics were used.
 
-- Mean Absolute Error (MAE)
+   - **Mean Absolute Error (MAE)**
 Chosen for its interpretability in days missed and robustness to outliers compared to MSE. It reflects typical prediction error without being dominated by extreme injuries.
-- Spearman Rank Correlation
-Measures whether the model correctly ranks players by injury risk, which is crucial for screening and prioritization even if exact day counts are imperfect.
-- Top-10% Capture Rate
-Evaluates the model’s ability to identify high-risk players, aligning with real-world medical and squad-management decisions where resources focus on the most vulnerable players.
+   - **Spearman Rank Correlation**
+Measures whether the model correctly ranks players by injury risk, which is crucial for screening and prioritization even if exact day counts are imperfect. The higer the better.
+   - **Top-10% Capture Rate**
+Evaluates the model’s ability to identify high-risk players, aligning with real-world medical and squad-management decisions where resources focus on the most vulnerable players. The higher the better.
 
 **1. Ridge Regression**
 
@@ -182,11 +185,11 @@ Validation:
 
 -Ridge performed competitively on MAE but lagged in ranking metrics, reflecting its linear limitation.
 
-## **Hyperparameter tuning**
+## **Train on full training set**
 We chose LGBM and Neural Network to do hyperparamter tuning as they have overal better performance.
 | Model                 | MAE ↓     | Spearman ↑       | Top-10% capture ↑ |
 | --------------------- | --------- | ---------------- | ----------------- |
-| **LGBM (full train)** | **↓13.19** | **↓ ~0.28–0.30** | **↓ ~0.43**      |
+| **LGBM (full train)** | **↑13.19** | **↓ ~0.28–0.30** | **↓ ~0.43**      |
 | **NN (full train)**   | **13.77** | **0.331**        | **0.552**         |
 
 When trained on the same full data, the NN generalizes better than LGBM. 
@@ -200,7 +203,7 @@ When trained on the same full data, the NN generalizes better than LGBM.
 
 - Offers better predictive stability across risk levels rather than only extreme cases
 
-## ** Inference Pipeline**
+## **Inference Pipeline**
 After training on full training data(combining training and validation set), the exported model (nn_pipeline.pkl) includes:
 
 - Feature vectorizer
@@ -223,15 +226,15 @@ Outputs:
 
 
 
-## **📦 Model Deployment**
+## **Model Deployment**
 - **Exported Artifacts**
 
   - full_dataset.csv — cleaned dataset
   - nn_pipeline.pkl — saved final model
 
-- **
 ### Local Deployment 
 #### 1. Prepare environment
+Use **Python 3.10 or 3.11** to ensure PyTorch install cleaning, Numpy, Pandas and Scikit=learn are compatible and pickled model can be loaded correctly.
 
 **Option A — Conda**
 
@@ -240,29 +243,15 @@ conda create -n football python=3.11 -y
 conda activate football
 pip install -r requirements.txt
 ```
-or
-```bash
-conda env create -f environment.yml
-conda activate football-injury-risk
 ```
 **Option B — pip + venv**
 create and activate a venv
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate   # macOS / Linux
 ```
 
-Windows (PowerShell)
-```bash
-.venv\Scripts\activate
-```
-
-install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-#### 2. Prepare the trained model
+#### 2. Prepare the trained model 
 To train and save the model locally:
 ```bash
 python train.py
@@ -273,22 +262,24 @@ python train.py
 python app.py
 ```
 Defalut port:9696\
-Access locally: http://127.0.0.1:9696/predict
+Access locally: http://127.0.0.1:9696
 
-- **Run the service (production-like) with Gunicorn**
+- **Run the service (production-like) with Waitress or Gunicorn**
 ```bash
-gunicorn --bind 0.0.0.0:9696 predict:app --workers 4
+waitress-serve --listen=0.0.0.0:9696 app:app
 ```
 #### 4.Test the API:**
+- **Output: injured days prediction and risk level**
 ```
 python predict-test.py
 ```
-or browser
-```
+<img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
+or browser with simple UI
+``
 http://127.0.0.1:9696/
 ```
-- **Output: injured days prediction and risk level**
-<img width="1542" height="580" alt="Snip20260119_1" src="https://github.com/user-attachments/assets/edad8416-8e2e-4e89-845f-5efed5338a99" />
+<img width="2002" height="1336" alt="Screenshot 2026-01-16 224213" src="https://github.com/user-attachments/assets/b191c79c-8c6b-422c-b426-dc2311216866" />
+
 
 
   
@@ -306,15 +297,16 @@ docker run -p 9696:9696 football-risk-app
 ```
 python predict-test.py
 ```
+<img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
 or browser
 ```
-http:/
-
-<img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
+http://127.0.0.1:9696/
+```
 <img width="1110" height="90" alt="Snip20260119_3" src="https://github.com/user-attachments/assets/cea304bd-b505-40af-a98e-80354c91a4cd" />
 
 ### Cloud Deployment (Render)
-- The service can be deployed to the cloud for remote access:
+- The service was deployed to the cloud for remote access:
+- Service URL: https://football-injury-risk.onrender.com/ (already deployed and can be accessd)
 - Instructions for Render deployment:
   1. push project to github repo
   2. Sign up(use github account is the easist) and log in to Render
@@ -323,7 +315,6 @@ http:/
   5. Click Create Web Service, Render will automatically build docker image, install dependencies from requirements.txt and start
   the Gunicorn server.
   6. After a minute or two, you’ll get a public URL like: https://netflix-churn-prediction.onrender.com
-- Service URL: https://football-injury-risk.onrender.com/ (already deployed and can be accessd)
 - screenshots and record of Render deployment
   
   
