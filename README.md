@@ -307,17 +307,19 @@ http://127.0.0.1:9696/
 ### Cloud Deployment (Render)
 - The service was deployed to the cloud for remote access:
 - Service URL: https://football-injury-risk.onrender.com/ (already deployed and can be accessd)
-- Instructions for Render deployment:
-  1. push project to github repo
-  2. Sign up(use github account is the easist) and log in to Render
+- **This is how I deployed to Render:**
+  1. Push project to github repo
+  2. Log in to Render
   3. Once logged in, click New → Web Service
   4. Connect to github repo and select football-injury-risk repo
   5. Click Create Web Service, Render will automatically build docker image, install dependencies from requirements.txt and start
-  the Gunicorn server.
-  6. After a minute or two, you’ll get a public URL like: https://netflix-churn-prediction.onrender.com
+  the Waitress server.
+  6. After a minute or two, I got a public URL: https://football-injury-risk.onrender.com/
 - screenshots and record of Render deployment
-  
-  
+  <img width="2142" height="620" alt="image" src="https://github.com/user-attachments/assets/85cad085-3dea-4029-8b04-e7779c6261b6" />
+
+  <img width="2162" height="1242" alt="image" src="https://github.com/user-attachments/assets/ba8723a0-5fe9-4636-9306-f9872a534870" />
+
 
 ## **📘 Conclusion**
 This project builds a robust injury prediction pipeline with:
@@ -327,16 +329,17 @@ This project builds a robust injury prediction pipeline with:
 - Multiple model families (linear, tree-based, deep learning)
 - Strong predictive performance on real football data
 - API deployment
-- Player risk dashboards
-- Club analytics workflows
+- Player injury risk analysis
+- Football analytics workflows
 
 ## ** Limitations**
-In injury research, true workload usually refers to:
+This project has several limitations due to the available data:
 
-- GPS distance
-- High-speed running
-- Accelerations / decelerations
-- Training load (session RPE × duration)
-- Acute:chronic workload ratios
-The kaggle datasets do not have these types of information. In addition, we use seasonal aggregation  data because we don't have match level details and information about environmental information such as stadium grass status and weather. And we only club performance data because of not having seasonal national team data.
+- **Workload metrics are limited**
+True workload in injury research often includes GPS distance, high-speed running, accelerations/decelerations, training load (session RPE × duration), and acute:chronic workload ratios. These metrics are not available in the Kaggle datasets used here.
 
+- **Aggregated seasonal data**
+Only seasonal aggregates are available; match-level details and environmental factors such as weather or stadium surface are missing.
+
+- **Club-only performance data**
+National team performance data is not included, so predictions are based solely on club-level statistics.
