@@ -21,7 +21,6 @@ This project focuses on predicting the risk of injury for football players using
   - player_performances
   - player_profiles
     
-Seasons filtered to 2000–2025.
 - **Predicition Probelm:**
   - Regression: Predict days missed next season due to injury.
   - → Target: days_missed missed next season.
@@ -30,6 +29,11 @@ Seasons filtered to 2000–2025.
 - **Season Normalization**
 Season strings come in inconsistent formats (YY/YY, YYYY/YY, YY/YYYY).
 A custom parser converts all formats to a **season_id (start year)**.
+-**Seasons filtered to 2000–2025.**
+   - Data is high-quality and consistent
+   - Models learn patterns relevant to modern football
+   - Avoids noise from older seasons with missing or inconsistent records
+     
 - **Injury Data**
   - Converted dates to datetime
   - Removed dates before 2000
