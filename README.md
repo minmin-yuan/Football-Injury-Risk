@@ -72,7 +72,7 @@ For each player-season:
 ```python
 log_next_season_days = log1p(next_season_days)
 ```
-## **🧠 Feature Engineering**
+## **Feature Engineering**
 **Numerical Features**
 - Performance: nb_on_pitch, nb_in_group, subed_in/out, goals, assists, yellow_cards, goals_conceded
 - Profile: height, age
@@ -82,21 +82,22 @@ log_next_season_days = log1p(next_season_days)
 
 - position_group → one‑hot encoded using DictVectorizer
   <img width="988" height="731" alt="output_91_0" src="https://github.com/user-attachments/assets/260baf34-96a5-423e-9ef1-4549d470d7fb" />
+There is no obvious separation between the groups.
+- All four positions have: Similar spread of values, clustering around the same log-days and presence of extreme values (outliers). There appears to be a few points slightly higher than the others for Goalkeepers.
 
-**Multicollinearity**
-
-- Removed nb_in_group due to high correlation with nb_on_pitch (≈0.9)
-
-
-## **🔎 Exploratory Data Analysis**
+## **Exploratory Data Analysis**
 Findings:
 <img width="1650" height="1187" alt="output_84_0" src="https://github.com/user-attachments/assets/897a63f9-8e90-494c-a4a3-d4fc579ebc30" />
 
 - Past injuries are the strongest predictors of future injuries
-  
 - Muscle & unknown injuries are most common
 - Some injury types correlate moderately with future risk
 - Performance stats have limited predictive power individually
+ <img width="636" height="391" alt="output_85_19" src="https://github.com/user-attachments/assets/a827b4a5-7bb9-4112-ab70-191d29256869" />
+ <img width="636" height="391" alt="output_85_18" src="https://github.com/user-attachments/assets/2fc5ba57-fc39-4713-a2f5-1e1ddad3499f" />
+
+  **Multicollinearity**
+- Removed nb_in_group due to high correlation with nb_on_pitch (≈0.9)
 
 
 ## **📑 Train/Validation/Test Split**
@@ -108,7 +109,22 @@ Temporal split:
 
 This prevents data leakage across seasons.
 
+## **Model Training**
+Model Selection: We use ridge regression for interpretability, LightGBM for peak predictive performance on tabular data, and a two-stage neural network to explicitly model latent injury vulnerability and exposure-driven risk.
+- Ridge Regression provides a strong and interpretable baseline to understand linear relationships and feature effects.
+- LightGBM represents a high-performance tree-based model that captures non-linear patterns common in sports performance data.
+ -Neural Network (Zero-Inflated) is specifically designed to handle the large number of zero-injury cases and model both injury risk and severity.
+  
 ## **🤖 Models Evaluated**
+Evaluation Criterion: This injury-risk prediction task involves zero-inflated, highly skewed data, where most players miss 0 days, while a small subset miss many days. Standard regression metrics alone are insufficient, so multiple complementary metrics were used.
+
+- Mean Absolute Error (MAE)
+Chosen for its interpretability in days missed and robustness to outliers compared to MSE. It reflects typical prediction error without being dominated by extreme injuries.
+- Spearman Rank Correlation
+Measures whether the model correctly ranks players by injury risk, which is crucial for screening and prioritization even if exact day counts are imperfect.
+- Top-10% Capture Rate
+Evaluates the model’s ability to identify high-risk players, aligning with real-world medical and squad-management decisions where resources focus on the most vulnerable players.
+
 **1. Ridge Regression**
 
 - MAE: 13.94
@@ -149,20 +165,43 @@ Validation:
 - Top‑10% capture: 0.563
 
 
-## **🏆 Best Model**
-Depends on business goal:
-- For lowest MAE (best numerical prediction):
-  - 👉 Neural Network (Zero‑Inflated)
-- For ranking players by risk (identifying highest-risk players):
-  - 👉 LightGBM
+## ** Model Comparision**
+| Model | MAE ↓   | Spearman ↑ | Top-10% capture ↑ |
+| ----- | ------- | ---------- | ----------------- |
+| LGBM  | 14.9988 | 0.3370     | 0.5703            |
+| Ridge | 13.9409 | 0.3159     | 0.5112            |
+| NN    | 13.7139| 0.3325     | 0.5625          |
 
-## **🔮 Inference Pipeline**
-The exported model (nn_pipeline.pkl) includes:
+-Neural Network (NN) achieved the lowest MAE (13.71), indicating the most accurate prediction of injury days on average.
+
+-LGBM showed the best ranking ability (highest Spearman and Top-10% capture), making it strong for identifying high-risk players.
+
+-Ridge performed competitively on MAE but lagged in ranking metrics, reflecting its linear limitation.
+
+## **Hyperparameter tuning**
+We chose LGBM and Neural Network to do hyperparamter tuning as they have overal better performance.
+| Model                 | MAE ↓     | Spearman ↑       | Top-10% capture ↑ |
+| --------------------- | --------- | ---------------- | ----------------- |
+| **LGBM (full train)** | **↓13.19** | **↓ ~0.28–0.30** | **↓ ~0.43**      |
+| **NN (full train)**   | **13.77** | **0.331**        | **0.552**         |
+
+When trained on the same full data, the NN generalizes better than LGBM. 
+
+**Final Selecion: Neural Network**
+- Delivers the best overall error performance (MAE) while remaining competitive in ranking metrics
+
+- Models non-linear interactions between workload, age, position, and injury history
+
+- Zero-inflated design aligns with injury reality (many zero-injury seasons)
+
+- Offers better predictive stability across risk levels rather than only extreme cases
+
+## ** Inference Pipeline**
+After training on full training data(combining training and validation set), the exported model (nn_pipeline.pkl) includes:
 
 - Feature vectorizer
 - Neural network weights
 - Feature order rules
-- Preprocessing (imputations, one-hot encoding)
 
 Outputs:
 
