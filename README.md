@@ -119,7 +119,7 @@ This prevents data leakage across seasons.
 - We use ridge regression for baseline model, LightGBM for peak predictive performance on tabular data, and zero-Inflated neural network to explicitly model latent injury vulnerability and exposure-driven risk.
    - Ridge Regression provides a strong and interpretable baseline to understand linear relationships and feature effects.
    - LightGBM represents a high-performance tree-based model that captures non-linear patterns common in sports performance data.
-    -Neural Network (Zero-Inflated) is specifically designed to handle the large number of zero-injury cases and model both injury risk and severity.
+   -Neural Network (Zero-Inflated) is specifically designed to handle the large number of zero-injury cases and model both injury risk and severity.
   
 ## **🤖 Models Evaluation & Hyperparameter Tuning**
 **Evaluation Criterion:**
@@ -269,16 +269,19 @@ Access locally: http://127.0.0.1:9696
 ```bash
 waitress-serve --listen=0.0.0.0:9696 app:app
 ```
-#### 4.Test the API:**
+#### 4.Test the API:
 - **Output: injured days prediction and risk level**
 ```
 python predict-test.py
 ```
 <img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
+
 or browser with simple UI
+
 ```
 http://127.0.0.1:9696/
 ```
+
 <img width="2002" height="1336" alt="Screenshot 2026-01-16 224213" src="https://github.com/user-attachments/assets/b191c79c-8c6b-422c-b426-dc2311216866" />
 
 
@@ -294,7 +297,6 @@ docker build -t football-risk-app .
 docker run -p 9696:9696 football-risk-app
 ```
 - screenshots of docker running and test
-- 
 ```
 python predict-test.py
 ```
@@ -310,13 +312,14 @@ http://127.0.0.1:9696/
 - Service URL: https://football-injury-risk.onrender.com/ (already deployed and can be accessd)
 - **This is how I deployed to Render:**
   1. Push project to github repo
-  2. Log in to Render
-  3. Once logged in, click New → Web Service
-  4. Connect to github repo and select football-injury-risk repo
-  5. Click Create Web Service, Render will automatically build docker image, install dependencies from requirements.txt and start
+  2. Log in to Render & click New → Web Service
+  3. Connect to github repo and select football-injury-risk repo
+  4. Click Create Web Service, Render will automatically build docker image, install dependencies from requirements.txt and start
   the Waitress server.
-  6. After a minute or two, I got a public URL: https://football-injury-risk.onrender.com/
+  5. After a minute or two, I got a public URL: https://football-injury-risk.onrender.com/
+
 - screenshots and record of Render deployment
+  
   <img width="2142" height="620" alt="image" src="https://github.com/user-attachments/assets/85cad085-3dea-4029-8b04-e7779c6261b6" />
 
   <img width="2162" height="1242" alt="image" src="https://github.com/user-attachments/assets/ba8723a0-5fe9-4636-9306-f9872a534870" />
