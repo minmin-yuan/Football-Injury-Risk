@@ -193,13 +193,15 @@ Outputs:
 **Option A — Conda**
 
 ```bash
-# create environment from provided file
-conda env create -f environment.yml
-
-# activate it
-conda activate netflix-churn
+conda create -n football python=3.11 -y
+conda activate football
+pip install -r requirements.txt
 ```
-
+or
+```bash
+conda env create -f environment.yml
+conda activate football-injury-risk
+```
 **Option B — pip + venv**
 create and activate a venv
 ```bash
@@ -225,7 +227,7 @@ python train.py
 #### 3. Run the service
 - **Run the Flask service locally**
 ```bash
-python predict.py
+python app.py
 ```
 Defalut port:9696\
 Access locally: http://127.0.0.1:9696/predict
@@ -234,26 +236,16 @@ Access locally: http://127.0.0.1:9696/predict
 ```bash
 gunicorn --bind 0.0.0.0:9696 predict:app --workers 4
 ```
-#### 4.Test the API: Use curl or a tool like Postman:**
+#### 4.Test the API:**
 ```
-curl -X POST http://127.0.0.1:9696/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "age": 34,
-    "gender": "Female",
-    "subscription_type": "Standard",
-    "watch_hours": 15.3,
-    "last_login_days": 5,
-    "region": "Europe",
-    "device": "Mobile",
-    "payment_method": "PayPal",
-    "number_of_profiles": 3,
-    "avg_watch_time_per_day": 1.2,
-    "favorite_genre": "Drama",
-    "age_group": "26–35"
-  }'
+python predict-test.py
 ```
-- **Output: Churn probability and binary churn prediction.**
+or browser
+```
+http://127.0.0.1:9696/
+```
+- **Output: injured days prediction and risk level**
+<img width="1542" height="580" alt="Snip20260119_1" src="https://github.com/user-attachments/assets/edad8416-8e2e-4e89-845f-5efed5338a99" />
 
 
   
@@ -262,14 +254,15 @@ The application can be containerized using Docker\
 Dockerfile: Provided in the repository.
 
 ```
-docker build -t netflix-churn .
+docker build -t football-injury-risk .
 ```
 ```
 docker run -p 9696:9696 netflix-churn
 ```
 - screenshots of docker running and test
-<img width="1356" height="292" alt="docker" src="https://github.com/user-attachments/assets/b413dbb4-06c4-4fed-84da-c9d0c19b9fab" />
-<img width="1128" height="218" alt="test_api" src="https://github.com/user-attachments/assets/13617f43-37d5-4b21-97c2-bc9684780e04" />
+
+<img width="1712" height="714" alt="Snip20260119_2" src="https://github.com/user-attachments/assets/d6124fc7-3951-4c57-b2b3-36f52b4b6544" />
+<img width="1110" height="90" alt="Snip20260119_3" src="https://github.com/user-attachments/assets/cea304bd-b505-40af-a98e-80354c91a4cd" />
 
 ### Cloud Deployment (Render)
 - The service can be deployed to the cloud for remote access:
