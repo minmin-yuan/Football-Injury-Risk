@@ -92,6 +92,10 @@ There is no obvious separation between the groups.
 
 ## **Exploratory Data Analysis**
 Findings:
+<img width="1280" height="324" alt="image" src="https://github.com/user-attachments/assets/056181d2-849d-4953-9edd-39e540fe2653" />
+
+- Dataset is highly skewed
+
 <img width="1650" height="1187" alt="output_84_0" src="https://github.com/user-attachments/assets/897a63f9-8e90-494c-a4a3-d4fc579ebc30" />
 
 - Past injuries are the strongest predictors of future injuries
@@ -121,7 +125,7 @@ This prevents data leakage across seasons.
    - LightGBM represents a high-performance tree-based model that captures non-linear patterns common in sports performance data.
    -Neural Network (Zero-Inflated) is specifically designed to handle the large number of zero-injury cases and model both injury risk and severity.
   
-## **🤖 Models Evaluation & Hyperparameter Tuning**
+## **Models Evaluation & Hyperparameter Tuning**
 **Evaluation Criterion:**
 - This injury-risk prediction task involves zero-inflated, highly skewed data, where most players miss 0 days, while a small subset miss many days. Standard regression metrics alone are insufficient, so multiple complementary metrics were used.
 
