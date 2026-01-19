@@ -1,14 +1,14 @@
 # Football-Injury-Risk
 ---
 
-## **📌 Overview**
+## **Problem Description**
 Football players are exposed to continuous physical stress due to intense training loads, high-speed movements, frequent accelerations/decelerations, and physical contact during matches. These factors contribute to a high incidence of injuries, which can significantly affect player performance, team outcomes, and club finances.
 
 This project focuses on predicting the risk of injury for football players using historical performance metrics, injury history and demographic data. By identifying early warning signs of elevated injury risk, coaches, medical staff, and analysts can make proactive decisions regarding training intensity, player rotation, and personalized recovery plans. 
 
 
 
-## **📂 Dataset**
+## **Dataset**
 - **Source:** Kaggle – football-datasets: https://www.kaggle.com/datasets/xfkzujqjvx97n/football-datasets/data
 - **Datasets in the source:**
    - Player injury histories (dates, injury_reason, days_missed, games_missed)
@@ -23,7 +23,7 @@ This project focuses on predicting the risk of injury for football players using
     
 Seasons filtered to 2000–2025.
 - **Predicition Probelm:**
-  - Regression: Predict days missed or games lost due to injury.
+  - Regression: Predict days missed next season due to injury.
   - → Target: days_missed missed next season.
 
 ## **🧹 Data Processing**
@@ -32,7 +32,7 @@ Season strings come in inconsistent formats (YY/YY, YYYY/YY, YY/YYYY).
 A custom parser converts all formats to a **season_id (start year)**.
 - **Injury Data**
   - Converted dates to datetime
-  - Removed invalid dates (before 2000)
+  - Removed dates before 2000
   - Outlier removal: days_missed > 365
   - Normalized injury_reason and mapped to **11 injury groups**:
 
@@ -46,7 +46,7 @@ A custom parser converts all formats to a **season_id (start year)**.
 - **Performance Data**
 
   - Filtered to players who actually played (nb_on_pitch > 0)
-  - Aggregated per player-season (to handle transfers)
+  - Aggregated per player-season (to handle players who have multiple records per season due to transfers)
   - Filled missing values (e.g., goals = 0)
 
 - **Profile Data**
@@ -81,6 +81,7 @@ log_next_season_days = log1p(next_season_days)
 **Categorical Features**
 
 - position_group → one‑hot encoded using DictVectorizer
+  <img width="988" height="731" alt="output_91_0" src="https://github.com/user-attachments/assets/260baf34-96a5-423e-9ef1-4549d470d7fb" />
 
 **Multicollinearity**
 
@@ -90,7 +91,6 @@ log_next_season_days = log1p(next_season_days)
 ## **🔎 Exploratory Data Analysis**
 Findings:
 <img width="1650" height="1187" alt="output_84_0" src="https://github.com/user-attachments/assets/897a63f9-8e90-494c-a4a3-d4fc579ebc30" />
-<img width="988" height="731" alt="output_91_0" src="https://github.com/user-attachments/assets/260baf34-96a5-423e-9ef1-4549d470d7fb" />
 
 - Past injuries are the strongest predictors of future injuries
   
